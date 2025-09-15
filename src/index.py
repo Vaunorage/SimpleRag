@@ -6,7 +6,6 @@ import re
 import shutil
 import time
 import requests
-from collections import defaultdict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
@@ -32,7 +31,7 @@ from docling.pipeline.vlm_pipeline import VlmPipeline
 from docling.datamodel import vlm_model_specs
 
 
-class DuckDBIndex:
+class SimpleRAG:
     """
     A comprehensive document index using DuckDB, handling everything from
     document processing and embedding to advanced search functionalities like
