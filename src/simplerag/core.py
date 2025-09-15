@@ -608,6 +608,7 @@ def lms_vlm_options(model: str, prompt: str, format: ResponseFormat):
     )
     return options
 
+
 def lms_olmocr_vlm_options(model: str):
     class OlmocrVlmOptions(ApiVlmOptions):
         def build_prompt(self, page: Optional[SegmentedPage]) -> str:
@@ -673,6 +674,7 @@ def lms_olmocr_vlm_options(model: str):
     )
     return options
 
+
 def ollama_vlm_options(model: str, prompt: str):
     options = ApiVlmOptions(
         url="http://localhost:11434/v1/chat/completions",  # the default Ollama endpoint
@@ -685,6 +687,7 @@ def ollama_vlm_options(model: str, prompt: str):
         response_format=ResponseFormat.MARKDOWN,
     )
     return options
+
 
 def watsonx_vlm_options(model: str, prompt: str):
     """Configures VLM options for IBM WatsonX.
@@ -729,11 +732,14 @@ def watsonx_vlm_options(model: str, prompt: str):
     )
     return options
 
-def load_documents_from_folder(folder_path: str, processing_type: str = 'simple', doc_types: Optional[List[str]] = None) -> list[Document]:
+
+def load_documents_from_folder(folder_path: str, processing_type: str = 'simple',
+                               doc_types: Optional[List[str]] = None) -> list[Document]:
     """Loads documents from a folder into a list of LlamaIndex Documents using different processing methods."""
     if doc_types is None:
-        doc_types = ['.pdf', '.docx', '.xlsx', '.pptx', '.md', '.adoc', '.asciidoc', '.html', '.xhtml', '.csv', '.png', '.jpeg', '.jpg', '.tiff', '.tif', '.bmp', '.webp']
-    
+        doc_types = ['.pdf', '.docx', '.xlsx', '.pptx', '.md', '.adoc', '.asciidoc', '.html', '.xhtml', '.csv', '.png',
+                     '.jpeg', '.jpg', '.tiff', '.tif', '.bmp', '.webp']
+
     extension_to_format = {
         '.pdf': InputFormat.PDF,
         '.docx': InputFormat.DOCX,
@@ -759,7 +765,7 @@ def load_documents_from_folder(folder_path: str, processing_type: str = 'simple'
     csv_format_option = CsvFormatOption(encoding="utf-8-sig", encoding_fallback="latin-1")
 
     documents = []
-    
+
     if processing_type == 'simple':
         converter = DocumentConverter(
             allowed_formats=allowed_formats,
@@ -781,10 +787,10 @@ def load_documents_from_folder(folder_path: str, processing_type: str = 'simple'
         )
     elif processing_type == 'watsonx':
         pipeline_options = VlmPipelineOptions(enable_remote_services=True)
-        
+
         # Using WatsonX by default for remote VLM
         pipeline_options.vlm_options = watsonx_vlm_options(
-            model="ibm/granite-vision-3-2-2b", 
+            model="ibm/granite-vision-3-2-2b",
             prompt="OCR the full page to markdown."
         )
 
@@ -807,7 +813,7 @@ def load_documents_from_folder(folder_path: str, processing_type: str = 'simple'
             try:
                 # Convert the document to a docling Document
                 result = converter.convert(source=file_path)
-                if result is None: # converter skips non-allowed files
+                if result is None:  # converter skips non-allowed files
                     continue
                 docling_doc = result.document
                 # Export to markdown
